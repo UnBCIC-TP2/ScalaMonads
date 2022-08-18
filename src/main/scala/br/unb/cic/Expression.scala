@@ -29,7 +29,7 @@ object Expression {
   def eval(exp: Expression): M[Integer] = exp match {
     case Const(v)  => Value(v)
     case Add(l, r) => eval(l) >>= ((x: Integer) => eval(r) >>= ((y: Integer) => pure(x + y)))
-    case Div(l, r) => eval(l) >>= ((x: Integer) => eval(r) >>= ((y: Integer) => if(y == 0) Error("Division by zero") else pure(x + y)))
+    case Div(l, r) => eval(l) >>= ((x: Integer) => eval(r) >>= ((y: Integer) => if(y == 0) Error("Division by zero") else pure(x /  y)))
   }
 }
 
