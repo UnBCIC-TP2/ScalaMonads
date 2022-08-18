@@ -3,8 +3,8 @@ package br.unb.cic
 sealed trait Expression
 
 case class Const(val value: Integer) extends Expression
-case class Add(val left: Expression, val right: Expression)
-case class Div(val left: Expression, val right: Expression)
+case class Add(val left: Expression, val right: Expression) extends Expression
+case class Div(val left: Expression, val right: Expression) extends Expression
 
 
 
