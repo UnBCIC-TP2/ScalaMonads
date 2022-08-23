@@ -10,11 +10,11 @@ Main reference:
    * [The Quick Essence of Functional Programming (video from Prof. Ralf Lammel)](https://youtu.be/s3YeFgiO7MA)
    * [Software extension and integration with type classes (R. Lammel and K. Ostermann)](https://www.informatik.uni-marburg.de/~kos/papers/gpce06.pdf)
 
-#### Branchs
+#### Branches
 
    * master: the very basic implementation of an interpreter for simple expressions
    * error: supporting error handling without using monads
-   * monads: a first attemp to implament a monadic version of the interpreter
+   * monads: a first attempt to implement a monadic version of the interpreter
    * monad-operator: refactoring of the `bind` function to an infix operator
    * cats: an implementation of `M` as an instance of the Monad type class
    
