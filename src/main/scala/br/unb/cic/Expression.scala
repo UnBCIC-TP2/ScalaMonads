@@ -3,17 +3,18 @@ package br.unb.cic
 sealed trait Expression
 
 case class Const(val value: Integer) extends Expression
-case class Add(val left: Expression, val right: Expression)
-case class Div(val left: Expression, val right: Expression)
+case class Add(val left: Expression, val right: Expression) extends Expression
+case class Div(val left: Expression, val right: Expression) extends Expression
 
-abstract class M[A, B]
+abstract class M[A]
 
-case class Value[A,B](v: A) extends M[A, B]
-case class Error[A,B](v: B) extends M[A, B]
+
+case class Value[A](v: A) extends M[A]
+case class Error[A](v: String) extends M[A]
 
 /** Variation one of eval: Error handling */
 object Expression {
-  def eval(exp: Expression): M[Integer, String] = exp match {
+  def eval(exp: Expression): M[Int] = exp match {
     case Const(v)  => Value(v)
     case Add(l, r) => {
       (eval(l), eval(r)) match {
