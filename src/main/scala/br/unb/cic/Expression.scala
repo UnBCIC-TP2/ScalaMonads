@@ -1,5 +1,9 @@
 package br.unb.cic
 
+import br.unb.cic.M.mMonad.pure
+import cats.Monad
+import cats.implicits.toFlatMapOps
+
 sealed trait Expression
 
 case class Const(val value: Integer) extends Expression
@@ -10,25 +14,29 @@ sealed trait M[A]
 
 object M {
   type Message = String
-  def pure[A](v: A) : M[A] = Value(v)
+  implicit val mMonad: Monad[M] = new Monad[M] {
+    override def pure[A](x: A): M[A] = Value(x)
 
-  def bind[A,B](m: M[A], f : A => M[B]): M[B] = m match {
-    case Value(v) => f(v)
-    case Error(b) => Error(b)
+    override def flatMap[A, B](m: M[A])(f: A => M[B]): M[B] = m match {
+      case Value(v) => f(v)
+      case Error(b) => Error(b)
+    }
+
+    override def tailRecM[A, B](a: A)(f: A => M[Either[A, B]]): M[B] = ???
   }
 }
 
-import M._
+import M.Message
 
 case class Value[A](v: A) extends M[A]
 case class Error[A](v: Message) extends M[A]
 
-/** Variation one of eval: Error handling */
+/** Variation one of eval: Error handling with cats */
 object Expression {
   def eval(exp: Expression): M[Integer] = exp match {
     case Const(v)  => Value(v)
-    case Add(l, r) => bind(eval(l), (x: Integer) => bind(eval(r), (y: Integer) => pure(x + y)))
-    case Div(l, r) => bind(eval(l), (x: Integer) => bind(eval(r), (y: Integer) => if(y == 0) Error("Division by zero") else pure(x / y)))
+    case Add(l, r) => eval(l).flatMap(x => eval(r).flatMap(y => pure(x + y)))
+    case Div(l, r) => eval(l).flatMap(x => eval(r).flatMap(y => if(y == 0) Error("Division by zero") else pure(x/y)))
   }
 }
 
