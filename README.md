@@ -8,7 +8,7 @@ Main reference:
 #### Additional references:
 
    * [The Quick Essence of Functional Programming (video from Prof. Ralf Lammel)](https://youtu.be/s3YeFgiO7MA)
-   * [Software extension and integration with type classes (R. Lammel and K. Ostermann)] (https://www.informatik.uni-marburg.de/~kos/papers/gpce06.pdf)
+   * [Software extension and integration with type classes (R. Lammel and K. Ostermann)](https://www.informatik.uni-marburg.de/~kos/papers/gpce06.pdf)
 
 #### Branchs
 
