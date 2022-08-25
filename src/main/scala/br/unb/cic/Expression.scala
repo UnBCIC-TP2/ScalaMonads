@@ -1,8 +1,9 @@
 package br.unb.cic
 
 import br.unb.cic.M.mMonad.pure
-import cats.Monad
+import cats.{Functor, Monad}
 import cats.implicits.toFlatMapOps
+import cats.implicits.toFunctorOps
 
 sealed trait Expression
 
@@ -14,6 +15,13 @@ sealed trait M[A]
 
 object M {
   type Message = String
+  implicit val mFunctor: Functor[M] = new Functor[M] {
+    override def map[A, B](fa: M[A])(f: A => B): M[B] = fa match {
+      case Value(a) => Value(f(a))
+      case Error(s) => Error(s)
+    }
+  }
+
   implicit val mMonad: Monad[M] = new Monad[M] {
     override def pure[A](x: A): M[A] = Value(x)
 
@@ -35,7 +43,11 @@ case class Error[A](v: Message) extends M[A]
 object Expression {
   def eval(exp: Expression): M[Integer] = exp match {
     case Const(v)  => Value(v)
-    case Add(l, r) => eval(l).flatMap(x => eval(r).flatMap(y => pure(x + y)))
+    case Add(l, r) =>
+      for {
+        x <- eval(l)
+        y <- eval(r)
+      } yield x+y
     case Div(l, r) => eval(l).flatMap(x => eval(r).flatMap(y => if(y == 0) Error("Division by zero") else pure(x/y)))
   }
 }
